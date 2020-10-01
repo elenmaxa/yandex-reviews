@@ -6,6 +6,7 @@ from scrapy import Request
 from review_scraper.items import ReviewItem, CommentItem
 import re
 import urllib
+from scrapy_splash import SplashRequest
 
 
 class ReviewSpider(Spider):
@@ -22,7 +23,10 @@ class ReviewSpider(Spider):
         self.start_urls = [f'https://yandex.by/maps/org/{company_name}/{company_id}/reviews/']
 
     def start_requests(self):
-        yield Request(self.start_urls[0], self.parse, meta={})
+        url = self.start_urls[0]
+        yield Request(url, self.parse, meta={})
+        # yield SplashRequest(url, callback=self.parse,
+        #                     args={'wait': 0.5, 'lua_source': self.script, 'url': url})
 
     def parse(self, response):
         """
